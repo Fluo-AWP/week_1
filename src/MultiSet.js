@@ -22,17 +22,33 @@ var MultiSet = function () {
 	}
 
 	this.toString = function () {
-		var str = '';
+		var str = '[';
+		var printedObjects = [];
 		for (var i = objects.length - 1; i >= 0; i--) {
 			var object = objects[i];
-			var count = this.count(object);
+			if (printedObjects.indexOf(object) < 0) {
+				if (printedObjects.length > 0) {
+					str += ', ';
+				}
 
-			str += object.toString();
-			if (count > 0) {
-				str += ' x ' + count;
+				if (typeof object === 'object') {
+					str += '{';
+					for (prop in object) {
+						str += '\"' + prop + '\": ' + object[prop];
+					}
+					str += '}';
+				} else {
+					str += object.toString();
+				}
+
+				var count = this.count(object);
+				if (count > 1) {
+					str += ' x ' + count;
+				}
+				printedObjects.push(object);
 			}
-			str += ', ';
 		};
+		str += ']';
 		return str;
 	}
 };

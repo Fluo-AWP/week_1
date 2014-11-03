@@ -21,10 +21,10 @@ test('Test can add to multiset', function() {
 
 	multiset.add(testObject);
 	equal(multiset.count(testObject), 2, 'Multiset count should return 2');
-	
-	multiset.add("hej med dig");
+
+	multiset.add("test");
 	equal(multiset.count(testObject), 2, 'Multiset count should return 2');
-	equal(multiset.count("hej med dig"), 1, 'Multiset count should return 1');
+	equal(multiset.count("test"), 1, 'Multiset count should return 1');
 });
 
 test('Test can remove from multiset', function() {
@@ -41,8 +41,9 @@ test('Test can remove from multiset', function() {
 test('Test prints multiset tostring correctly', function() {
 	var multiset = new MultiSet();
 
+	multiset.add("test");
 	multiset.add(testObject);
 	multiset.add(testObject);
-	ok(typeof multiset.toString() === 'String', 'message');
-	equal(multiset.toString(), '[{"test": true} x 2', 'Multiset toString should print [{"test": true} x 2');
+	ok(typeof multiset.toString() === 'string', 'Multiset toString should return string');
+	equal(multiset.toString(), '[{"test": true} x 2, test]', 'Multiset toString should print [{"test": true} x 2, test]');
 });
