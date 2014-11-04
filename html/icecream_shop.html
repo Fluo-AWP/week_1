@@ -7,20 +7,57 @@
 	<div id="topping-container">
 		<form id="topping-container">
 			<label for="input-sprinkles">sprinkles</label>
-			<input type="checkbox" name="sprinkles" id="input-sprinkles" />
+			<input type="checkbox" name="sprinkles" id="input-sprinkles" class="topping-input" />
 			<br />
 			<label for="input-chocolate-chips">chocolate chips</label>
-			<input type="checkbox" name="chocolate-chips" id="input-chocolate-chips" />
+			<input type="checkbox" name="chocolate-chips" id="input-chocolate-chips" class="topping-input" />
 			<br />
 			<label for="input-strawberry-syrup">strawberry syrup</label>
-			<input type="checkbox" name="strawberry-syrup" id="input-strawberry-syrup" />
+			<input type="checkbox" name="strawberry-syrup" id="input-strawberry-syrup" class="topping-input" />
 			<br />
 			<label for="input-banana-flakes">banana flakes</label>
-			<input type="checkbox" name="banana-flakes" id="input-banana-flakes" />
+			<input type="checkbox" name="banana-flakes" id="input-banana-flakes" class="topping-input" />
 			<br />
 			<label for="input-caramel-sauce">caramel sauce</label>
-			<input type="checkbox" name="caramel-sauce" id="input-caramel-sauce" />
+			<input type="checkbox" name="caramel-sauce" id="input-caramel-sauce" class="topping-input" />
 		</form>
 	</div>
 </body>
+<script type="text/javascript">
+	var toppings = [];
+	var toppingInputs = document.getElementsByClassName('topping-input');
+
+	var validateTopping = function () {
+		var name = this.getAttribute('name');
+		if (this.checked == true) {
+			if (toppings.length > 2) {
+				alert("You can only choose 3 toppings");
+				this.checked = false;
+				return;
+			}
+
+			if (name == 'strawberry-syrup' && toppings.indexOf('caramel-sauce') > -1) {
+				alert("You cannot choose strawberry syrup and caramel sauce at the same time");
+				this.checked = false;
+				return;
+			}
+
+			if (name == 'caramel-sauce' && toppings.indexOf('strawberry-syrup') > -1) {
+				alert("You cannot choose strawberry syrup and caramel sauce at the same time");
+				this.checked = false;
+				return;
+			}
+
+			toppings.push(name);
+		}
+
+		if (this.checked == false) {
+			toppings.pop(name);
+		}
+	}
+
+	for (var i = toppingInputs.length - 1; i >= 0; i--) {
+		toppingInputs[i].addEventListener('click', validateTopping);
+	};
+</script>
 </html>
