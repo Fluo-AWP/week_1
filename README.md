@@ -3,8 +3,8 @@ week_1
 
 Exercises
 ---------
-1. Write a JavaScript implementation of the datatype multiset (look here for a Java version) with the following operations: add, remove, count, contains, and toString. You may assume that all objects stored in the multisets have an equals method and a hashCode method. Provide some unit tests to exercise all functionality via an HTML page.
-2. 
+1. ~~Write a JavaScript implementation of the datatype multiset (look here for a Java version) with the following operations: add, remove, count, contains, and toString. You may assume that all objects stored in the multisets have an equals method and a hashCode method. Provide some unit tests to exercise all functionality via an HTML page.~~
+
 2. A Web shop wants to sell ice cream online. They offer 5 different kinds of toppings: sprinkles, chocolate chips, strawberry syrup, banana flakes, and caramel sauce. Toppings are chosen using 5 checkboxes. However, some constraints apply:
   1. at most three toppings may be selected
   2. strawberry syrup and caramel sauce cannot both be chosen (too messy!)
