@@ -5,12 +5,12 @@
 	</title>
 	<style>
 	#game-container {
-		width: 300px;
-		height: 400px;
+		width: 400px;
+		height: 500px;
 		background-color: #999;
 		margin-left: auto;
 		margin-right: auto;
-		margin-top: 20%;
+		margin-top: 5%;
 	}
 
 	.brick {
@@ -19,25 +19,25 @@
 	}
 
 	.large-square {
-		width: 100px;
-		height: 100px;
+		width: 200px;
+		height: 200px;
 		background-color: #a91021;
 	}
 
 	.small-square {
-		width: 50px;
-		height: 50px;
+		width: 100px;
+		height: 100px;
 	}
 
 	.vertical-rectangle {
-		width: 50px;
-		height: 100px;
+		width: 100px;
+		height: 200px;
 		background-color: #000066;
 	}
 
 	.horizontal-rectangle {
-		width: 100px;
-		height: 50px;
+		width: 200px;
+		height: 100px;
 		background-color: #a0a90c;
 	}
 	</style>
@@ -45,9 +45,15 @@
 <body>
 	<div id="game-container">
 		<div class="brick small-square"></div>
+		<!-- <div class="brick small-square"></div>
+		<div class="brick small-square"></div>
+		<div class="brick small-square"></div>
 		<div class="brick large-square"></div>
 		<div class="brick vertical-rectangle"></div>
-		<div class="brick horizontal-rectangle"></div>
+		<div class="brick vertical-rectangle"></div>
+		<div class="brick vertical-rectangle"></div>
+		<div class="brick vertical-rectangle"></div>
+		<div class="brick horizontal-rectangle"></div> -->
 	</div>
 <script type="text/javascript">
 	var bricks = document.getElementsByClassName('brick'),
@@ -55,6 +61,7 @@
 
 	readyBrick = function () {
 		currentBrick = this;
+		currentBrick.className = currentBrick.className + ' selected';	
 	},
 
 	moveCurrentBrick = function (e) {
@@ -62,22 +69,29 @@
 		if (!currentBrick) return; 
 		// move up
 		if (e.keyCode === 38) {
-			var oldMargin = currentBrick.style.marginBottom;
-			currentBrick.style.marginBottom = oldMargin.substr(0, oldMargin.length) + 20;
+			var oldMargin = currentBrick.style.marginTop ? currentBrick.style.marginTop : '0px';
+				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
+			currentBrick.style.marginTop = oldMargin - 100;
 		}
 			
 		// move down
 		if (e.keyCode === 40) {
-			var oldMargin = currentBrick.style.marginTop;
-			currentBrick.style.marginTop = oldMargin.substr(0, oldMargin.length) + 20;
+			var oldMargin = currentBrick.style.marginTop ? currentBrick.style.marginTop : '0px';
+				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
+			currentBrick.style.marginTop = oldMargin + 100;
 		}
 		// move right
-		if (e.keyCode === 39)
-			currentBrick.style.marginLeft += 20;
+		if (e.keyCode === 39) {
+			var oldMargin = currentBrick.style.marginLeft ? currentBrick.style.marginLeft : '0px';
+				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
+			currentBrick.style.marginLeft = oldMargin + 100;
+		}
 		// move left
-		if (e.keyCode === 37)
-			currentBrick.style.marginRight += 20;
-		
+		if (e.keyCode === 37) {
+			var oldMargin = currentBrick.style.marginLeft ? currentBrick.style.marginLeft : '0px';
+				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
+			currentBrick.style.marginLeft = oldMargin - 100;
+		}		
 	};
 
 	for (var i = bricks.length - 1; i >= 0; i--) {
