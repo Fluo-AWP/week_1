@@ -45,7 +45,7 @@
 <body>
 	<div id="game-container">
 		<div class="brick small-square"></div>
-		<!-- <div class="brick small-square"></div>
+		<div class="brick small-square"></div>
 		<div class="brick small-square"></div>
 		<div class="brick small-square"></div>
 		<div class="brick large-square"></div>
@@ -53,13 +53,14 @@
 		<div class="brick vertical-rectangle"></div>
 		<div class="brick vertical-rectangle"></div>
 		<div class="brick vertical-rectangle"></div>
-		<div class="brick horizontal-rectangle"></div> -->
+		<div class="brick horizontal-rectangle"></div>
 	</div>
 <script type="text/javascript">
 	var bricks = document.getElementsByClassName('brick'),
 		currentBrick = null,
 
 	readyBrick = function () {
+		if (currentBrick) currentBrick.className = currentBrick.className.replace('selected', '');
 		currentBrick = this;
 		currentBrick.className = currentBrick.className + ' selected';	
 	},
@@ -67,31 +68,18 @@
 	moveCurrentBrick = function (e) {
 		// Do nothing of no brick is selected
 		if (!currentBrick) return; 
-		// move up
-		if (e.keyCode === 38) {
-			var oldMargin = currentBrick.style.marginTop ? currentBrick.style.marginTop : '0px';
-				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
-			currentBrick.style.marginTop = oldMargin - 100;
+
+		// up - down
+		if (e.keyCode === 38 || e.keyCode === 40) {
+			var oldMargin = currentBrick.style.marginTop ? parseFloat(currentBrick.style.marginTop) : 0;
+			currentBrick.style.marginTop = e.keyCode === 38 ? oldMargin - 100 : oldMargin + 100;
 		}
-			
-		// move down
-		if (e.keyCode === 40) {
-			var oldMargin = currentBrick.style.marginTop ? currentBrick.style.marginTop : '0px';
-				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
-			currentBrick.style.marginTop = oldMargin + 100;
-		}
-		// move right
-		if (e.keyCode === 39) {
-			var oldMargin = currentBrick.style.marginLeft ? currentBrick.style.marginLeft : '0px';
-				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
-			currentBrick.style.marginLeft = oldMargin + 100;
-		}
-		// move left
-		if (e.keyCode === 37) {
-			var oldMargin = currentBrick.style.marginLeft ? currentBrick.style.marginLeft : '0px';
-				oldMargin = parseFloat(oldMargin.substr(0, oldMargin.length - 2));
-			currentBrick.style.marginLeft = oldMargin - 100;
-		}		
+
+		// left - right
+		if (e.keyCode === 37 || e.keyCode === 39) {
+			var oldMargin = currentBrick.style.marginLeft ? parseFloat(currentBrick.style.marginLeft) : 0;
+			currentBrick.style.marginLeft = e.keyCode === 37 ? oldMargin - 100 : oldMargin + 100;
+		}	
 	};
 
 	for (var i = bricks.length - 1; i >= 0; i--) {
