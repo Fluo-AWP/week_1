@@ -16,6 +16,10 @@
 	.brick {
 		position: absolute;
 		background-color: #1f660d;
+		box-sizing: border-box;
+  		-moz-box-sizing: border-box;
+  		-webkit-box-sizing: border-box;
+  		border:1px solid white;
 	}
 
 	.large-square {
@@ -40,24 +44,38 @@
 		height: 100px;
 		background-color: #a0a90c;
 	}
+
+	.selected {
+		z-index: 999;
+		-moz-box-shadow: inset 0 0 10px #000000;
+		-webkit-box-shadow: inset 0 0 10px #000000;
+		box-shadow: inset 0 0 10px #000000;
+	}
 	</style>
 </head>
 <body>
 	<div id="game-container">
-		<div class="brick small-square"></div>
-		<div class="brick small-square"></div>
-		<div class="brick small-square"></div>
-		<div class="brick small-square"></div>
-		<div class="brick large-square"></div>
-		<div class="brick vertical-rectangle"></div>
-		<div class="brick vertical-rectangle"></div>
-		<div class="brick vertical-rectangle"></div>
-		<div class="brick vertical-rectangle"></div>
-		<div class="brick horizontal-rectangle"></div>
+		<div class="brick small-square" style="margin-left: 100px; margin-top: 300px;"></div>
+		<div class="brick small-square" style="margin-left: 200px; margin-top: 300px;"></div>
+		<div class="brick small-square" style="margin-left: 100px; margin-top: 400px;"></div>
+		<div class="brick small-square" style="margin-left: 200px; margin-top: 400px;"></div>
+		<div class="brick large-square" style="margin-left: 100px;"></div>
+		<div class="brick vertical-rectangle" style=""></div>
+		<div class="brick vertical-rectangle" style="margin-top: 300px;"></div>
+		<div class="brick vertical-rectangle" style="margin-left: 300px;"></div>
+		<div class="brick vertical-rectangle" style="margin-left: 300px; margin-top: 300px;"></div>
+		<div class="brick horizontal-rectangle" style="margin-left: 100px; margin-top: 200px;"></div>
 	</div>
 <script type="text/javascript">
 	var bricks = document.getElementsByClassName('brick'),
 		currentBrick = null,
+		gameContainer = document.getElementById('game-container'),
+		bounds = {
+			top: 0,
+			bottom: parseFloat(window.getComputedStyle(gameContainer).getPropertyValue('height')),
+			left: 0,
+			right: parseFloat(window.getComputedStyle(gameContainer).getPropertyValue('width'))
+		},
 
 	readyBrick = function () {
 		if (currentBrick) currentBrick.className = currentBrick.className.replace('selected', '');
@@ -65,21 +83,53 @@
 		currentBrick.className = currentBrick.className + ' selected';	
 	},
 
+	overlaps = function (e1, e2) {
+		if (e1 === e2) return false;
+		var rect1 = e1.getBoundingClientRect(),
+			rect2 = e2.getBoundingClientRect();
+		return !(rect1.right <= rect2.left || 
+                rect1.left >= rect2.right  || 
+                rect1.bottom <= rect2.top  || 
+                rect1.top >= rect2.bottom);
+	},
+
+	isOnBoard = function (e, d) {
+		var style = window.getComputedStyle(e);
+		if (d === 'up')
+			if (parseFloat(style.getPropertyValue('margin-top')) <= bounds.top)
+				return false;
+		if (d === 'down')
+			if (parseFloat(style.getPropertyValue('margin-top')) + parseFloat(style.getPropertyValue('height')) >= bounds.bottom)
+				return false;
+		if (d === 'left')
+			if (parseFloat(style.getPropertyValue('margin-left')) <= bounds.left)
+				return false;
+		if (d === 'right')
+			if (parseFloat(style.getPropertyValue('margin-left')) + parseFloat(style.getPropertyValue('width')) >= bounds.right)
+				return false;
+		return true;
+	},
+
 	moveCurrentBrick = function (e) {
 		// Do nothing of no brick is selected
 		if (!currentBrick) return; 
+		var oldTop = currentBrick.style.marginTop ? parseFloat(currentBrick.style.marginTop) : 0;
+		var oldLeft = currentBrick.style.marginLeft ? parseFloat(currentBrick.style.marginLeft) : 0;
 
 		// up - down
-		if (e.keyCode === 38 || e.keyCode === 40) {
-			var oldMargin = currentBrick.style.marginTop ? parseFloat(currentBrick.style.marginTop) : 0;
-			currentBrick.style.marginTop = e.keyCode === 38 ? oldMargin - 100 : oldMargin + 100;
-		}
+		if (e.keyCode === 38 || e.keyCode === 40)
+			currentBrick.style.marginTop = e.keyCode === 38 ? (isOnBoard(currentBrick, 'up') ? oldTop - 100 : oldTop) : (isOnBoard(currentBrick, 'down') ? oldTop + 100 : oldTop);
 
 		// left - right
-		if (e.keyCode === 37 || e.keyCode === 39) {
-			var oldMargin = currentBrick.style.marginLeft ? parseFloat(currentBrick.style.marginLeft) : 0;
-			currentBrick.style.marginLeft = e.keyCode === 37 ? oldMargin - 100 : oldMargin + 100;
-		}	
+		if (e.keyCode === 37 || e.keyCode === 39)
+			currentBrick.style.marginLeft = e.keyCode === 37 ? (isOnBoard(currentBrick, 'left') ? oldLeft - 100 : oldLeft) : (isOnBoard(currentBrick, 'right') ? oldLeft + 100 : oldLeft);
+
+		for (var i = bricks.length - 1; i >= 0; i--) {
+			if (overlaps(currentBrick, bricks[i])) {
+				currentBrick.style.marginTop = oldTop;
+				currentBrick.style.marginLeft = oldLeft;
+			}
+		};
 	};
 
 	for (var i = bricks.length - 1; i >= 0; i--) {
