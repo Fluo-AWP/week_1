@@ -1,6 +1,11 @@
 <html>
 <head>
 	<title>Icecream Shop</title>
+	<style>
+		#error{
+			color: #FF0000;
+		}
+	</style>
 </head>
 <body>
 	<h1>Choose toppings</h1>
@@ -20,44 +25,75 @@
 			<br />
 			<label for="input-caramel-sauce">caramel sauce</label>
 			<input type="checkbox" name="caramel-sauce" id="input-caramel-sauce" class="topping-input" />
+			<br />
+			<input type="submit" value="Submit" />
 		</form>
+		<p id="error"></p>
 	</div>
 </body>
 <script type="text/javascript">
 	var toppings = [];
 	var toppingInputs = document.getElementsByClassName('topping-input');
+	var form = document.getElementById('topping-container');
+	var errorBox = document.getElementById('error');
 
 	var validateTopping = function () {
 		var name = this.getAttribute('name');
 		if (this.checked == true) {
 			if (toppings.length > 2) {
-				alert("You can only choose 3 toppings");
+				errorBox.innerHTML = "You can only choose 3 toppings";
 				this.checked = false;
 				return;
 			}
 
 			if (name == 'strawberry-syrup' && toppings.indexOf('caramel-sauce') > -1) {
-				alert("You cannot choose strawberry syrup and caramel sauce at the same time");
+				errorBox.innerHTML = "You cannot choose strawberry syrup and caramel sauce at the same time";
 				this.checked = false;
 				return;
 			}
 
 			if (name == 'caramel-sauce' && toppings.indexOf('strawberry-syrup') > -1) {
-				alert("You cannot choose strawberry syrup and caramel sauce at the same time");
+				errorBox.innerHTML = "You cannot choose strawberry syrup and caramel sauce at the same time";
 				this.checked = false;
 				return;
 			}
 
 			toppings.push(name);
+			errorBox.innerHTML = "";
 		}
 
 		if (this.checked == false) {
 			toppings.pop(name);
+			errorBox.innerHTML = "";
 		}
 	}
 
+	/*
+	* Adding event listeners to check-boxes
+	*/
 	for (var i = toppingInputs.length - 1; i >= 0; i--) {
 		toppingInputs[i].addEventListener('click', validateTopping);
 	};
+
+	/*
+	* Adding event listener to form submission
+	*/
+	form.onsubmit = function (){
+		var output = 'Your order is accepted: \n';
+
+		for (var i = toppings.length - 1; i >= 0; i--) {
+			output += '- ' + toppings[i] + '\n';
+		};
+
+		errorBox.innerHTML = "";
+		toppings = [];
+		for (var i = toppingInputs.length - 1; i >= 0; i--) {
+			toppingInputs[i].checked = false;
+		};
+		alert(output);
+
+		return false;
+	}
+
 </script>
 </html>
